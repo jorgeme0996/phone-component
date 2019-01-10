@@ -1,0 +1,61 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="player-component">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            audio {
+                width: 200px;
+                margin-top: 200px;
+            }
+        </style>
+
+        <section id="player">
+            <audio id="song" controls>
+                <source src="/cancion.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+    </template>
+
+    <script>
+        class PlayerComponent extends Polymer.Element {
+            static get is() {return 'player-component'}
+            static get properties() {
+                return {
+                    consumeBattery: {
+                        charge: Number,
+                        value: 0
+                    },
+                }
+            }
+
+            ready(){
+                super.ready();
+                this.getSong();
+            }
+
+            getSong(){
+                let song = this.$.song;
+                song.ontimeupdate = ()=>{
+                    let restar = (Math.round(song.currentTime))
+                    this.set('consumeBattery', restar)
+                    this._consumeBattery()
+                }
+            }
+
+            _consumeBattery(){
+                this.dispatchEvent( new CustomEvent('consume-battery', {
+                    bubbles: true,
+                    composed: true,
+                    detail: this.consumeBattery
+                }));
+            }
+
+        }
+
+        window.customElements.define(PlayerComponent.is, PlayerComponent)
+    </script>
+</dom-module>

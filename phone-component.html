@@ -1,0 +1,48 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="./battery-component.html">
+<link rel="import" href="./player-component.html">
+
+<dom-module id="phone-component">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        align-content: center;
+      }
+      section#phone{
+        height: 320px;
+        width: 200px;
+        border: solid gainsboro 20px;
+        border-bottom: solid 40px gainsboro;
+        border-radius: 15%;
+        padding: 20px;
+      }
+    </style>
+    <section id="phone">
+      <battery-component id="battery"></battery-component>
+      <player-component on-consume-battery="consumeBattery"></player-component>
+    </section>
+  </template>
+
+  <script>
+    class PhoneComponent extends Polymer.Element {
+      static get is() { return 'phone-component'; }
+      static get properties() {
+        return {
+          battery: {
+            charge: Number,
+            value: 100
+          }
+        };
+      }
+
+      consumeBattery(event){
+        let currentBaterry = this.battery - 1;
+        this.set('battery', currentBaterry)
+        this.$.battery.set('battery', currentBaterry);
+      }
+    }
+
+    window.customElements.define(PhoneComponent.is, PhoneComponent);
+  </script>
+</dom-module>

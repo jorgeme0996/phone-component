@@ -1,0 +1,81 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="battery-component">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            section#battery{
+                height: 20px;
+                width: 100px;
+                border: solid black 4px;
+                margin-left: 50%;
+                display: flex;
+            }
+
+            div.pila {
+                box-sizing: border-box;
+                height: 20px;
+                width: 100px;
+                border: solid green 2px;
+                background-color: green;  
+            }
+            paper-button{
+                background-color: gainsboro;
+                color: white;
+                margin-left: 50%;
+                margin-top: 2%;
+            }
+
+        </style>
+
+        <section id="battery">
+            <div class="pila" style$="width: {{battery}}px"></div>
+        </section>
+        <paper-button on-click="charge" >Charge</paper-button>
+    </template>
+
+    <script>
+        class BaterryComponent extends Polymer.Element {
+            static get is() {return 'battery-component'}
+            static get properties() {
+                return {
+                    battery: {
+                        charge: Number,
+                        value: 100
+                    },
+                    isCharging: {
+                        isCharging: Boolean,
+                        value: false
+                    }, 
+                    interval: {
+                        type: Event
+                    }
+                }
+            }
+
+            charge(){
+                this.isCharging = !this.isCharging;
+                if(this.isCharging === true){
+                    if(this.battery === 100){
+                    alert('Bateria al 100%');
+                    } else {
+                        this.interval = setInterval(()=>{
+                            let currentBaterry;
+                            for(let i=0; i < 100 - this.battery; i++){
+                                currentBaterry = this.battery + 1;
+                                this.battery = currentBaterry;
+                            }
+                        }, 1000)
+                    }
+                } else {
+                    clearInterval(this.interval);
+                }
+            }   
+        }
+
+        window.customElements.define(BaterryComponent.is, BaterryComponent)
+    </script>
+</dom-module>
